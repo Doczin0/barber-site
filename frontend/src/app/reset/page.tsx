@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
+import { API_URL } from "@/lib/api";
 
 export default function ResetRequestPage() {
   const [email, setEmail] = useState("");
@@ -12,16 +13,22 @@ export default function ResetRequestPage() {
     e.preventDefault();
     setLoading(true);
     setMessage(null);
-    const res = await fetch("/api/auth/reset/request", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email }),
-    });
-    setLoading(false);
-    if (!res.ok) {
-      setMessage("Não foi possível enviar o link.");
-    } else {
-      setMessage("Enviamos um link para redefinir sua senha.");
+    try {
+      const res = await fetch(`${API_URL}/auth/reset/request`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      if (!res.ok) {
+        setMessage("Não foi possível enviar o link.");
+      } else {
+        setMessage("Enviamos um link para redefinir sua senha.");
+      }
+    } catch (err) {
+      console.error(err);
+      setMessage("Erro ao enviar o link.");
+    } finally {
+      setLoading(false);
     }
   }
 

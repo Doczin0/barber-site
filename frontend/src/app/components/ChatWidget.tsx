@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { FaComments, FaTimes, FaRobot, FaUser } from "react-icons/fa";
+import { apiFetch } from "@/lib/api";
 
 type Message = {
   role: "user" | "assistant";
@@ -49,7 +50,7 @@ export default function ChatWidget() {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/chat", {
+      const res = await apiFetch("/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: text.trim(), history: historyForApi }),

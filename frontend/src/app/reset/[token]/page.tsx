@@ -2,6 +2,7 @@
 
 import { useState, FormEvent } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { API_URL } from "@/lib/api";
 
 export default function ResetConfirmPage() {
   const { token } = useParams<{ token: string }>();
@@ -15,18 +16,24 @@ export default function ResetConfirmPage() {
     e.preventDefault();
     setLoading(true);
     setMessage(null);
-    const res = await fetch("/api/auth/reset", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token, password, confirmPassword }),
-    });
-    const data = await res.json();
-    setLoading(false);
-    if (!res.ok) {
-      setMessage(data.error || "Não foi possível redefinir.");
-    } else {
-      setMessage("Senha alterada! Voltando para login...");
-      setTimeout(() => router.push("/login"), 1200);
+    try {
+      const res = await fetch(`${API_URL}/auth/reset/confirm`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token, password, confirmPassword }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setMessage(data.error || "Não foi possível redefinir.");
+      } else {
+        setMessage("Senha alterada! Voltando para login...");
+        setTimeout(() => router.push("/login"), 1200);
+      }
+    } catch (err) {
+      console.error(err);
+      setMessage("Erro ao redefinir.");
+    } finally {
+      setLoading(false);
     }
   }
 

@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
+import { API_URL } from "@/lib/api";
 
 export default function SignupPage() {
   const [name, setName] = useState("");
@@ -15,17 +16,23 @@ export default function SignupPage() {
     e.preventDefault();
     setMessage(null);
     setLoading(true);
-    const res = await fetch("/api/auth/signup", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password, confirmPassword }),
-    });
-    const data = await res.json();
-    setLoading(false);
-    if (!res.ok) {
-      setMessage(data.error || "Não foi possível criar a conta.");
-    } else {
-      setMessage("Conta criada! Agora faça login.");
+    try {
+      const res = await fetch(`${API_URL}/auth/signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password, confirmPassword }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setMessage(data.error || "Não foi possível criar a conta.");
+      } else {
+        setMessage("Conta criada! Agora faça login.");
+      }
+    } catch (err) {
+      console.error(err);
+      setMessage("Erro ao criar conta.");
+    } finally {
+      setLoading(false);
     }
   }
 

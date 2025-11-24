@@ -2,6 +2,9 @@
 
 # dependencies
 /node_modules
+/frontend/node_modules
+/backend/node_modules
+/.turbo
 /.pnp
 .pnp.*
 .yarn/*
@@ -15,6 +18,8 @@
 
 # next.js
 /.next/
+/frontend/.next/
+/backend/dist
 /out/
 
 # production
