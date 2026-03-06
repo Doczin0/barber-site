@@ -18,6 +18,15 @@
 
 # next.js
 /.next/
+
+# database
+backend/prisma/dev.db
+backend/prisma/dev.db-journal
+
+# env
+.env
+.env.local
+backend/.env
 /frontend/.next/
 /backend/dist
 /out/
