@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { API_URL } from "@/lib/api";
 
 export default function LoginPage() {
@@ -9,13 +10,14 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   async function handlePasswordLogin(e: FormEvent) {
     e.preventDefault();
     setMessage(null);
     setLoading(true);
     try {
-      const res = await fetch(`${API_URL}/auth/login`, {
+      const res = await fetch(`/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -26,6 +28,7 @@ export default function LoginPage() {
       } else {
         localStorage.setItem("token", data.token);
         setMessage("Login realizado!");
+        router.push("/");
       }
     } catch (err) {
       console.error(err);

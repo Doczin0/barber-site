@@ -21,6 +21,13 @@ app.register(cors, {
 
 app.get("/health", async () => ({ ok: true }));
 
+app.get("/users", async () => {
+  const users = await prisma.user.findMany({
+    select: { id: true, name: true, email: true, createdAt: true },
+  });
+  return users;
+});
+
 const signupSchema = z.object({
   name: z.string().min(2),
   email: z.string().email(),
